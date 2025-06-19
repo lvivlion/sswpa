@@ -241,7 +241,7 @@
                     <p class="text-gray-500 mt-3 text-lg">Get ready for a concert night!</p>
                 </div>
                 <div id="events-container" class="max-w-4xl mx-auto">
-                    <p class="text-center">Loading upcoming events...</p>
+                    <!-- Dummy events will be loaded here -->
                 </div>
                 <div id="load-more-container" class="text-center mt-12"></div>
             </div>
@@ -334,137 +334,64 @@
     </a>
 
     <script>
-        // --- START: iCal Event Fetching and Parsing ---
-        function parseIcs(icsData) {
-            const events = [];
-            const eventBlocks = icsData.split('BEGIN:VEVENT');
-            eventBlocks.shift();
-
-            eventBlocks.forEach(block => {
-                const event = {};
-                const lines = block.match(/[^\r\n]+/g) || [];
-                let currentKey = '';
-                let currentValue = '';
-
-                lines.forEach(line => {
-                    if (line.startsWith(' ') || line.startsWith('\t')) {
-                        currentValue += line.trim();
-                    } else {
-                        if (currentKey) {
-                           event[currentKey] = currentValue.replace(/\\n/g, '\n').replace(/\\,/g, ',');
-                        }
-                        const [key, ...valueParts] = line.split(':');
-                        if (key) {
-                            currentKey = key.split(';')[0];
-                            currentValue = valueParts.join(':');
-                        }
-                    }
-                });
-                event[currentKey] = currentValue;
-
-                if(event.DTSTART) {
-                    events.push({
-                        title: event.SUMMARY || 'No Title',
-                        description: event.DESCRIPTION || 'No description provided.',
-                        location: event.LOCATION || 'No location provided.',
-                        startDate: parseIcsDate(event.DTSTART),
-                        endDate: parseIcsDate(event.DTEND || event.DTSTART),
-                    });
-                }
-            });
-            return events;
-        }
-
-        function parseIcsDate(dateString) {
-            if (!dateString) return null;
-            const year = dateString.substring(0, 4);
-            const month = parseInt(dateString.substring(4, 6), 10) - 1;
-            const day = dateString.substring(6, 8);
-            let hour = '00', minute = '00', second = '00';
-
-            if (dateString.includes('T')) {
-                hour = dateString.substring(9, 11) || '00';
-                minute = dateString.substring(11, 13) || '00';
-                second = dateString.substring(13, 15) || '00';
-            }
-            return new Date(Date.UTC(year, month, day, hour, minute, second));
-        }
-
-        async function fetchCalendarEvents() {
-            const icalUrl = 'https://calendar.google.com/calendar/ical/30be94c49a77e9942a703b2236b63d7dfa727e2daa33250151f278c1135391c7%40group.calendar.google.com/public/basic.ics';
+        // --- START: Dummy Event Loading ---
+        function displayDummyEvents() {
             const eventsContainer = document.getElementById('events-container');
             const loadMoreContainer = document.getElementById('load-more-container');
             
-            try {
-                // Using a more reliable iCal to JSON conversion service via a proxy.
-                const apiUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://api.ical-to-json.com/v1?url=${icalUrl}`)}`;
-                const response = await fetch(apiUrl);
-                if (!response.ok) throw new Error(`API error: ${response.status} ${response.statusText}`);
-                
-                const data = await response.json();
-                
-                if (data.error) throw new Error(`iCal Conversion API Error: ${data.error}`);
-
-                const allEvents = (data.vcalendar?.[0]?.vevent || [])
-                    .map(event => ({
-                        title: event.summary,
-                        description: event.description || 'No description provided.',
-                        location: event.location || 'No location provided.',
-                        startDate: new Date(event.dtstart.value),
-                        endDate: new Date(event.dtend.value)
-                    }))
-                    .filter(event => event.endDate >= new Date())
-                    .sort((a, b) => a.startDate - b.startDate);
-
-                eventsContainer.innerHTML = '';
-                loadMoreContainer.innerHTML = '';
-
-                if (allEvents.length > 0) {
-                    let displayedCount = 0;
-                    const displayEvents = (count) => {
-                        const fragment = document.createDocumentFragment();
-                        const eventsToDisplay = allEvents.slice(displayedCount, displayedCount + count);
-                        
-                        eventsToDisplay.forEach((event, index) => {
-                             if (displayedCount > 0 || index > 0) {
-                                const divider = document.createElement('div');
-                                divider.className = 'w-full border-t border-gray-300 border-dashed my-12';
-                                fragment.appendChild(divider);
-                            }
-                            const eventHtml = createEventHtml(event);
-                            const wrapper = document.createElement('div');
-                            wrapper.innerHTML = eventHtml;
-                            fragment.appendChild(wrapper.firstChild);
-                        });
-                        
-                        eventsContainer.appendChild(fragment);
-                        displayedCount += eventsToDisplay.length;
-                        feather.replace();
-                    };
-
-                    displayEvents(5);
-
-                    if (allEvents.length > 5) {
-                        const loadMoreBtn = document.createElement('button');
-                        loadMoreBtn.innerText = 'Load More Events';
-                        loadMoreBtn.className = 'text-white font-semibold px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all duration-300';
-                        loadMoreBtn.style.backgroundColor = 'var(--text-color)';
-                        
-                        loadMoreBtn.onclick = () => {
-                            displayEvents(5);
-                            if (displayedCount >= allEvents.length) {
-                                loadMoreBtn.remove();
-                            }
-                        };
-                        loadMoreContainer.appendChild(loadMoreBtn);
-                    }
-                } else {
-                    eventsContainer.innerHTML = '<p class="text-center">No upcoming events found.</p>';
+            const dummyEvents = [
+                {
+                    title: "An Evening with Emanuel Ax",
+                    description: "Experience the legendary pianist Emanuel Ax in an intimate solo recital. A night of breathtaking classical music.",
+                    location: "Heinz Hall for the Performing Arts, Pittsburgh, PA",
+                    startDate: new Date("2025-09-15T19:30:00"),
+                    endDate: new Date("2025-09-15T21:30:00")
+                },
+                {
+                    title: "Young Artists Showcase",
+                    description: "Discover the next generation of piano virtuosos from Western Pennsylvania in our annual showcase competition.",
+                    location: "Carnegie Music Hall, Pittsburgh, PA",
+                    startDate: new Date("2025-10-22T18:00:00"),
+                    endDate: new Date("2025-10-22T21:00:00")
+                },
+                {
+                    title: "Holiday Pops with The Symphony",
+                    description: "A festive tradition! Join us for a magical evening of holiday classics featuring renowned guest pianists.",
+                    location: "Heinz Hall for the Performing Arts, Pittsburgh, PA",
+                    startDate: new Date("2025-12-12T19:00:00"),
+                    endDate: new Date("2025-12-12T21:00:00")
+                },
+                {
+                    title: "Jazz Piano Masters: A Tribute to Art Tatum",
+                    description: "An electrifying night celebrating the genius of Art Tatum, featuring some of today's most acclaimed jazz pianists.",
+                    location: "Manchester Craftsmen's Guild, Pittsburgh, PA",
+                    startDate: new Date("2026-01-18T20:00:00"),
+                    endDate: new Date("2026-01-18T22:00:00")
+                },
+                {
+                    title: "Valentine's Day Concert: Chopin & Champagne",
+                    description: "A romantic evening filled with the timeless works of Frédéric Chopin, complete with a champagne reception.",
+                    location: "The Frick Art & Historical Center, Pittsburgh, PA",
+                    startDate: new Date("2026-02-14T19:00:00"),
+                    endDate: new Date("2026-02-14T21:00:00")
                 }
-            } catch (error) {
-                console.error('Error fetching or parsing iCal data:', error);
-                eventsContainer.innerHTML = `<p class="text-center text-red-500">Could not load events. Please try again later.</p>`;
-            }
+            ];
+
+            eventsContainer.innerHTML = '';
+            loadMoreContainer.innerHTML = '';
+
+            dummyEvents.forEach((event, index) => {
+                if (index > 0) {
+                    const divider = document.createElement('div');
+                    divider.className = 'w-full border-t border-gray-300 border-dashed my-12';
+                    eventsContainer.appendChild(divider);
+                }
+                const eventHtml = createEventHtml(event);
+                const wrapper = document.createElement('div');
+                wrapper.innerHTML = eventHtml;
+                eventsContainer.appendChild(wrapper.firstChild);
+            });
+            feather.replace();
         }
 
         function createEventHtml(event) {
@@ -502,7 +429,7 @@
         }
         function toGoogleISO(date) { return date.toISOString().replace(/[:.-]/g, "").slice(0, -4) + "Z"; }
         function toAppleISO(date) { return date.toISOString().replace(/[:.-]/g, "").slice(0, -4) + "Z"; }
-        // --- END: iCal Event Fetching and Parsing ---
+        // --- END: Dummy Event Loading ---
 
         // --- START: Artist Carousel ---
         function initArtistCarousel() {
@@ -625,7 +552,7 @@
             feather.replace();
             document.getElementById('year').textContent = new Date().getFullYear();
             
-            fetchCalendarEvents();
+            displayDummyEvents(); // Using dummy events instead of fetching
             initArtistCarousel();
             initHeroTextAnimation();
             initHeaderRotation();

@@ -396,21 +396,15 @@
             const loadMoreContainer = document.getElementById('load-more-container');
             
             try {
-                // Using a reliable iCal to JSON conversion service via a proxy to avoid CORS issues.
-                const apiUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://api.ical-to-json.com/v1?url=${icalUrl}`)}`;
-                const response = await fetch(apiUrl);
-                if (!response.ok) throw new Error(`API error: ${response.status} ${response.statusText}`);
+                // Using a more robust CORS proxy that is less likely to fail.
+                const proxyUrl = `https://cors-anywhere.herokuapp.com/`;
+                const response = await fetch(proxyUrl + icalUrl);
+                if (!response.ok) throw new Error(`CORS proxy error: ${response.status} ${response.statusText}`);
                 
-                const data = await response.json();
-                
-                const allEvents = (data.vcalendar?.[0]?.vevent || [])
-                    .map(event => ({
-                        title: event.summary,
-                        description: event.description || 'No description provided.',
-                        location: event.location || 'No location provided.',
-                        startDate: new Date(event.dtstart.value),
-                        endDate: new Date(event.dtend.value)
-                    }))
+                const icsData = await response.text();
+                if (!icsData.includes("BEGIN:VCALENDAR")) throw new Error("Invalid iCal data received from proxy.");
+
+                const allEvents = parseIcs(icsData)
                     .filter(event => event.endDate >= new Date())
                     .sort((a, b) => a.startDate - b.startDate);
 
@@ -461,7 +455,7 @@
                 }
             } catch (error) {
                 console.error('Error fetching or parsing iCal data:', error);
-                eventsContainer.innerHTML = `<p class="text-center text-red-500">Could not load events. Please try again later.</p>`;
+                eventsContainer.innerHTML = `<p class="text-center text-red-500">Could not load events. The public proxy may be busy. Please try again.</p>`;
             }
         }
 
@@ -548,7 +542,7 @@
                 carouselInterval = setInterval(() => {
                     currentIndex = (currentIndex + 1) % artists.length;
                     showArtists();
-                }, 5000); // 5 seconds
+                }, 8000); // Slower rotation: 8 seconds
             }
 
             prevBtn.addEventListener('click', () => {

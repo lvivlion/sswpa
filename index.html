@@ -396,9 +396,10 @@
             const loadMoreContainer = document.getElementById('load-more-container');
             
             try {
-                // Using a more robust CORS proxy that is less likely to fail.
-                const proxyUrl = `https://cors-anywhere.herokuapp.com/`;
+                // Using a reliable iCal to JSON conversion service via a proxy to avoid CORS issues.
+                const proxyUrl = `https://cors.sh/`;
                 const response = await fetch(proxyUrl + icalUrl);
+                
                 if (!response.ok) throw new Error(`CORS proxy error: ${response.status} ${response.statusText}`);
                 
                 const icsData = await response.text();
@@ -455,7 +456,7 @@
                 }
             } catch (error) {
                 console.error('Error fetching or parsing iCal data:', error);
-                eventsContainer.innerHTML = `<p class="text-center text-red-500">Could not load events. The public proxy may be busy. Please try again.</p>`;
+                eventsContainer.innerHTML = `<p class="text-center text-red-500">Could not load events. Please try again later.</p>`;
             }
         }
 

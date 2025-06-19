@@ -396,16 +396,23 @@
             const loadMoreContainer = document.getElementById('load-more-container');
             
             try {
-                // Using a reliable iCal to JSON conversion service via a proxy to avoid CORS issues.
-                const proxyUrl = `https://cors.sh/`;
-                const response = await fetch(proxyUrl + icalUrl);
+                // Using a more reliable iCal to JSON conversion service via a proxy.
+                const apiUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://api.ical-to-json.com/v1?url=${icalUrl}`)}`;
+                const response = await fetch(apiUrl);
+                if (!response.ok) throw new Error(`API error: ${response.status} ${response.statusText}`);
                 
-                if (!response.ok) throw new Error(`CORS proxy error: ${response.status} ${response.statusText}`);
+                const data = await response.json();
                 
-                const icsData = await response.text();
-                if (!icsData.includes("BEGIN:VCALENDAR")) throw new Error("Invalid iCal data received from proxy.");
+                if (data.error) throw new Error(`iCal Conversion API Error: ${data.error}`);
 
-                const allEvents = parseIcs(icsData)
+                const allEvents = (data.vcalendar?.[0]?.vevent || [])
+                    .map(event => ({
+                        title: event.summary,
+                        description: event.description || 'No description provided.',
+                        location: event.location || 'No location provided.',
+                        startDate: new Date(event.dtstart.value),
+                        endDate: new Date(event.dtend.value)
+                    }))
                     .filter(event => event.endDate >= new Date())
                     .sort((a, b) => a.startDate - b.startDate);
 

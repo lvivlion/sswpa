@@ -390,17 +390,16 @@
         }
 
         async function fetchCalendarEvents() {
-            const icalUrl = 'https://calendar.google.com/calendar/ical/30be94c49a77e9942a703b2236b63d7dfa727e2daa33250151f278c1135391c7%40group.calendar.google.com/public/basic.ics';
             const eventsContainer = document.getElementById('events-container');
             const loadMoreContainer = document.getElementById('load-more-container');
             
             try {
-                // Using a more reliable CORS proxy
-                const proxyUrl = `https://cors.sh/`;
-                const response = await fetch(proxyUrl + icalUrl);
-                if (!response.ok) throw new Error(`CORS proxy error: ${response.status} ${response.statusText}`);
+                // This is the server-side endpoint you will create.
+                const response = await fetch('/api/get-events'); 
+                if (!response.ok) throw new Error(`API error: ${response.status} ${response.statusText}`);
+                
                 const icsData = await response.text();
-                if (!icsData.includes("BEGIN:VCALENDAR")) throw new Error("Invalid iCal data received from proxy.");
+                if (!icsData.includes("BEGIN:VCALENDAR")) throw new Error("Invalid iCal data received from server.");
 
                 const allEvents = parseIcs(icsData)
                     .filter(event => event.endDate >= new Date())
@@ -453,7 +452,7 @@
                 }
             } catch (error) {
                 console.error('Error fetching or parsing iCal data:', error);
-                eventsContainer.innerHTML = `<p class="text-center text-red-500">Could not load events. Please check the calendar link or try again later.</p>`;
+                eventsContainer.innerHTML = `<p class="text-center text-red-500">Could not load events. Please ensure the server-side API is running.</p>`;
             }
         }
 
@@ -606,7 +605,7 @@
                     titleLong.style.opacity = 0;
                 }
                 isShortTitleVisible = !isShortTitleVisible;
-            }, 300000); // 5 minutes = 300,000 milliseconds
+            }, 5000); // 5 seconds
         }
         // --- END: Header Title Rotation ---
 

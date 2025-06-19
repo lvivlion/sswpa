@@ -240,10 +240,83 @@
                     <h2 class="text-5xl font-bold">Upcoming Events</h2>
                     <p class="text-gray-500 mt-3 text-lg">Get ready for a concert night!</p>
                 </div>
-                <div id="events-container" class="max-w-4xl mx-auto">
-                    <!-- Dummy events will be loaded here -->
+                <div id="events-container" class="max-w-4xl mx-auto space-y-12">
+                    <!-- Event 1 -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+                        <div class="md:col-span-1 text-center md:text-right md:border-r-2 md:pr-8 border-gray-300">
+                            <h3 class="text-2xl font-bold">An Evening with Emanuel Ax</h3>
+                            <p class="font-semibold text-lg" style="color: var(--accent-color);">Sep 15, 2025</p>
+                            <p class="text-gray-500">7:30 PM - 9:30 PM</p>
+                        </div>
+                        <div class="md:col-span-2">
+                             <p class="mb-4">Experience the legendary pianist Emanuel Ax in an intimate solo recital. A night of breathtaking classical music.</p>
+                            <div class="flex items-center space-x-4">
+                               <a href="#" class="calendar-button"><i data-feather="calendar" class="w-4 h-4 mr-2"></i> Google Calendar</a>
+                               <a href="#" class="calendar-button"><i data-feather="apple" class="w-4 h-4 mr-2"></i> Apple Calendar</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Event 2 -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+                        <div class="md:col-span-1 text-center md:text-right md:border-r-2 md:pr-8 border-gray-300">
+                            <h3 class="text-2xl font-bold">Young Artists Showcase</h3>
+                            <p class="font-semibold text-lg" style="color: var(--accent-color);">Oct 22, 2025</p>
+                            <p class="text-gray-500">6:00 PM - 9:00 PM</p>
+                        </div>
+                        <div class="md:col-span-2">
+                             <p class="mb-4">Discover the next generation of piano virtuosos from Western Pennsylvania in our annual showcase competition.</p>
+                            <div class="flex items-center space-x-4">
+                               <a href="#" class="calendar-button"><i data-feather="calendar" class="w-4 h-4 mr-2"></i> Google Calendar</a>
+                               <a href="#" class="calendar-button"><i data-feather="apple" class="w-4 h-4 mr-2"></i> Apple Calendar</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Event 3 -->
+                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+                        <div class="md:col-span-1 text-center md:text-right md:border-r-2 md:pr-8 border-gray-300">
+                            <h3 class="text-2xl font-bold">Holiday Pops with The Symphony</h3>
+                            <p class="font-semibold text-lg" style="color: var(--accent-color);">Dec 12, 2025</p>
+                            <p class="text-gray-500">7:00 PM - 9:00 PM</p>
+                        </div>
+                        <div class="md:col-span-2">
+                             <p class="mb-4">A festive tradition! Join us for a magical evening of holiday classics featuring renowned guest pianists.</p>
+                            <div class="flex items-center space-x-4">
+                               <a href="#" class="calendar-button"><i data-feather="calendar" class="w-4 h-4 mr-2"></i> Google Calendar</a>
+                               <a href="#" class="calendar-button"><i data-feather="apple" class="w-4 h-4 mr-2"></i> Apple Calendar</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Event 4 -->
+                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+                        <div class="md:col-span-1 text-center md:text-right md:border-r-2 md:pr-8 border-gray-300">
+                            <h3 class="text-2xl font-bold">Jazz Piano Masters</h3>
+                            <p class="font-semibold text-lg" style="color: var(--accent-color);">Jan 18, 2026</p>
+                            <p class="text-gray-500">8:00 PM - 10:00 PM</p>
+                        </div>
+                        <div class="md:col-span-2">
+                             <p class="mb-4">An electrifying night celebrating the genius of Art Tatum, featuring some of today's most acclaimed jazz pianists.</p>
+                            <div class="flex items-center space-x-4">
+                               <a href="#" class="calendar-button"><i data-feather="calendar" class="w-4 h-4 mr-2"></i> Google Calendar</a>
+                               <a href="#" class="calendar-button"><i data-feather="apple" class="w-4 h-4 mr-2"></i> Apple Calendar</a>
+                            </div>
+                        </div>
+                    </div>
+                     <!-- Event 5 -->
+                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+                        <div class="md:col-span-1 text-center md:text-right md:border-r-2 md:pr-8 border-gray-300">
+                            <h3 class="text-2xl font-bold">Valentine's Day Concert</h3>
+                            <p class="font-semibold text-lg" style="color: var(--accent-color);">Feb 14, 2026</p>
+                            <p class="text-gray-500">7:00 PM - 9:00 PM</p>
+                        </div>
+                        <div class="md:col-span-2">
+                             <p class="mb-4">A romantic evening filled with the timeless works of Frédéric Chopin, complete with a champagne reception.</p>
+                            <div class="flex items-center space-x-4">
+                               <a href="#" class="calendar-button"><i data-feather="calendar" class="w-4 h-4 mr-2"></i> Google Calendar</a>
+                               <a href="#" class="calendar-button"><i data-feather="apple" class="w-4 h-4 mr-2"></i> Apple Calendar</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div id="load-more-container" class="text-center mt-12"></div>
             </div>
         </section>
 
@@ -334,103 +407,6 @@
     </a>
 
     <script>
-        // --- START: Dummy Event Loading ---
-        function displayDummyEvents() {
-            const eventsContainer = document.getElementById('events-container');
-            const loadMoreContainer = document.getElementById('load-more-container');
-            
-            const dummyEvents = [
-                {
-                    title: "An Evening with Emanuel Ax",
-                    description: "Experience the legendary pianist Emanuel Ax in an intimate solo recital. A night of breathtaking classical music.",
-                    location: "Heinz Hall for the Performing Arts, Pittsburgh, PA",
-                    startDate: new Date("2025-09-15T19:30:00"),
-                    endDate: new Date("2025-09-15T21:30:00")
-                },
-                {
-                    title: "Young Artists Showcase",
-                    description: "Discover the next generation of piano virtuosos from Western Pennsylvania in our annual showcase competition.",
-                    location: "Carnegie Music Hall, Pittsburgh, PA",
-                    startDate: new Date("2025-10-22T18:00:00"),
-                    endDate: new Date("2025-10-22T21:00:00")
-                },
-                {
-                    title: "Holiday Pops with The Symphony",
-                    description: "A festive tradition! Join us for a magical evening of holiday classics featuring renowned guest pianists.",
-                    location: "Heinz Hall for the Performing Arts, Pittsburgh, PA",
-                    startDate: new Date("2025-12-12T19:00:00"),
-                    endDate: new Date("2025-12-12T21:00:00")
-                },
-                {
-                    title: "Jazz Piano Masters: A Tribute to Art Tatum",
-                    description: "An electrifying night celebrating the genius of Art Tatum, featuring some of today's most acclaimed jazz pianists.",
-                    location: "Manchester Craftsmen's Guild, Pittsburgh, PA",
-                    startDate: new Date("2026-01-18T20:00:00"),
-                    endDate: new Date("2026-01-18T22:00:00")
-                },
-                {
-                    title: "Valentine's Day Concert: Chopin & Champagne",
-                    description: "A romantic evening filled with the timeless works of Frédéric Chopin, complete with a champagne reception.",
-                    location: "The Frick Art & Historical Center, Pittsburgh, PA",
-                    startDate: new Date("2026-02-14T19:00:00"),
-                    endDate: new Date("2026-02-14T21:00:00")
-                }
-            ];
-
-            eventsContainer.innerHTML = '';
-            loadMoreContainer.innerHTML = '';
-
-            dummyEvents.forEach((event, index) => {
-                if (index > 0) {
-                    const divider = document.createElement('div');
-                    divider.className = 'w-full border-t border-gray-300 border-dashed my-12';
-                    eventsContainer.appendChild(divider);
-                }
-                const eventHtml = createEventHtml(event);
-                const wrapper = document.createElement('div');
-                wrapper.innerHTML = eventHtml;
-                eventsContainer.appendChild(wrapper.firstChild);
-            });
-            feather.replace();
-        }
-
-        function createEventHtml(event) {
-            const { title, description, location, startDate, endDate } = event;
-            const displayDate = startDate.toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric', year: 'numeric' });
-            
-            const isAllDay = startDate.getUTCHours() === 0 && startDate.getUTCMinutes() === 0 && endDate.getUTCHours() === 0 && endDate.getUTCMinutes() === 0;
-            let displayTime = 'All Day';
-            if (!isAllDay) {
-                const startTime = startDate.toLocaleTimeString('en-US', { timeZone: 'UTC', hour: 'numeric', minute: '2-digit', hour12: true });
-                const endTime = endDate.toLocaleTimeString('en-US', { timeZone: 'UTC', hour: 'numeric', minute: '2-digit', hour12: true });
-                displayTime = `${startTime} - ${endTime}`;
-            }
-
-            const gCalLink = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${toGoogleISO(startDate)}/${toGoogleISO(endDate)}&details=${encodeURIComponent(description)}&location=${encodeURIComponent(location)}`;
-            const appleCalData = `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nURL:${document.location.href}\nDTSTART:${toAppleISO(startDate)}\nDTEND:${toAppleISO(endDate)}\nSUMMARY:${title}\nDESCRIPTION:${description.replace(/\n/g, '\\n')}\nLOCATION:${location}\nEND:VEVENT\nEND:VCALENDAR`;
-            const appleCalLink = `data:text/calendar;charset=utf8,${encodeURIComponent(appleCalData)}`;
-
-            return `
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
-                    <div class="md:col-span-1 text-center md:text-right md:border-r-2 md:pr-8 border-gray-300">
-                        <h3 class="text-2xl font-bold">${title}</h3>
-                        <p class="font-semibold text-lg" style="color: var(--accent-color);">${displayDate}</p>
-                        <p class="text-gray-500">${displayTime}</p>
-                    </div>
-                    <div class="md:col-span-2">
-                         <p class="mb-4">${description}</p>
-                        <div class="flex items-center space-x-4">
-                           <a href="${gCalLink}" target="_blank" class="calendar-button"><i data-feather="calendar" class="w-4 h-4 mr-2"></i> Google Calendar</a>
-                           <a href="${appleCalLink}" download="${title}.ics" class="calendar-button"><i data-feather="apple" class="w-4 h-4 mr-2"></i> Apple Calendar</a>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-        function toGoogleISO(date) { return date.toISOString().replace(/[:.-]/g, "").slice(0, -4) + "Z"; }
-        function toAppleISO(date) { return date.toISOString().replace(/[:.-]/g, "").slice(0, -4) + "Z"; }
-        // --- END: Dummy Event Loading ---
-
         // --- START: Artist Carousel ---
         function initArtistCarousel() {
             const artists = [
@@ -477,7 +453,7 @@
                 carouselInterval = setInterval(() => {
                     currentIndex = (currentIndex + 1) % artists.length;
                     showArtists();
-                }, 8000); // Slower rotation: 8 seconds
+                }, 5000); // 5 seconds
             }
 
             prevBtn.addEventListener('click', () => {
@@ -552,7 +528,6 @@
             feather.replace();
             document.getElementById('year').textContent = new Date().getFullYear();
             
-            displayDummyEvents(); // Using dummy events instead of fetching
             initArtistCarousel();
             initHeroTextAnimation();
             initHeaderRotation();

@@ -108,7 +108,7 @@
         
         /* --- Artist Carousel Styles --- */
         .artist-card {
-            transition: opacity 1.2s cubic-bezier(0.25, 1, 0.5, 1), transform 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1), transform 1.5s cubic-bezier(0.4, 0, 0.2, 1);
             opacity: 0;
             transform: translateY(20px);
             display: none; /* Hidden by default */
@@ -390,16 +390,33 @@
         }
 
         async function fetchCalendarEvents() {
+            // This is now pointing to a server-side endpoint YOU will create when publishing.
+            // It removes the need for unreliable 3rd party proxies.
+            const apiEndpoint = '/api/get-events'; 
             const eventsContainer = document.getElementById('events-container');
             const loadMoreContainer = document.getElementById('load-more-container');
             
             try {
-                // This is the server-side endpoint you will create.
-                const response = await fetch('/api/get-events'); 
-                if (!response.ok) throw new Error(`API error: ${response.status} ${response.statusText}`);
-                
-                const icsData = await response.text();
-                if (!icsData.includes("BEGIN:VCALENDAR")) throw new Error("Invalid iCal data received from server.");
+                const response = await fetch(apiEndpoint); 
+                if (!response.ok) {
+                    // Fallback to a reliable proxy ONLY IF the serverless function fails.
+                    // This provides a backup but the primary method is your own server endpoint.
+                    console.warn(`Could not fetch from ${apiEndpoint}. Falling back to proxy.`);
+                    const icalUrl = 'https://calendar.google.com/calendar/ical/30be94c49a77e9942a703b2236b63d7dfa727e2daa33250151f278c1135391c7%40group.calendar.google.com/public/basic.ics';
+                    const proxyUrl = `https://cors.sh/`;
+                    const proxyResponse = await fetch(proxyUrl + icalUrl);
+                     if (!proxyResponse.ok) throw new Error(`Fallback proxy error: ${proxyResponse.status} ${proxyResponse.statusText}`);
+                     return await processIcsData(await proxyResponse.text());
+                }
+                return await processIcsData(await response.text());
+
+            } catch (error) {
+                console.error('Error fetching or parsing iCal data:', error);
+                eventsContainer.innerHTML = `<p class="text-center text-red-500">Could not load events. Please ensure the server-side API is running or try again later.</p>`;
+            }
+
+            function processIcsData(icsData) {
+                if (!icsData.includes("BEGIN:VCALENDAR")) throw new Error("Invalid iCal data received.");
 
                 const allEvents = parseIcs(icsData)
                     .filter(event => event.endDate >= new Date())
@@ -450,9 +467,6 @@
                 } else {
                     eventsContainer.innerHTML = '<p class="text-center">No upcoming events found.</p>';
                 }
-            } catch (error) {
-                console.error('Error fetching or parsing iCal data:', error);
-                eventsContainer.innerHTML = `<p class="text-center text-red-500">Could not load events. Please ensure the server-side API is running.</p>`;
             }
         }
 

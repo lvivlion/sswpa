@@ -335,20 +335,74 @@
 
     <script>
         // --- START: iCal Event Fetching and Parsing ---
+        function parseIcs(icsData) {
+            const events = [];
+            const eventBlocks = icsData.split('BEGIN:VEVENT');
+            eventBlocks.shift();
+
+            eventBlocks.forEach(block => {
+                const event = {};
+                const lines = block.match(/[^\r\n]+/g) || [];
+                let currentKey = '';
+                let currentValue = '';
+
+                lines.forEach(line => {
+                    if (line.startsWith(' ') || line.startsWith('\t')) {
+                        currentValue += line.trim();
+                    } else {
+                        if (currentKey) {
+                           event[currentKey] = currentValue.replace(/\\n/g, '\n').replace(/\\,/g, ',');
+                        }
+                        const [key, ...valueParts] = line.split(':');
+                        if (key) {
+                            currentKey = key.split(';')[0];
+                            currentValue = valueParts.join(':');
+                        }
+                    }
+                });
+                event[currentKey] = currentValue;
+
+                if(event.DTSTART) {
+                    events.push({
+                        title: event.SUMMARY || 'No Title',
+                        description: event.DESCRIPTION || 'No description provided.',
+                        location: event.LOCATION || 'No location provided.',
+                        startDate: parseIcsDate(event.DTSTART),
+                        endDate: parseIcsDate(event.DTEND || event.DTSTART),
+                    });
+                }
+            });
+            return events;
+        }
+
+        function parseIcsDate(dateString) {
+            if (!dateString) return null;
+            const year = dateString.substring(0, 4);
+            const month = parseInt(dateString.substring(4, 6), 10) - 1;
+            const day = dateString.substring(6, 8);
+            let hour = '00', minute = '00', second = '00';
+
+            if (dateString.includes('T')) {
+                hour = dateString.substring(9, 11) || '00';
+                minute = dateString.substring(11, 13) || '00';
+                second = dateString.substring(13, 15) || '00';
+            }
+            return new Date(Date.UTC(year, month, day, hour, minute, second));
+        }
+
         async function fetchCalendarEvents() {
             const icalUrl = 'https://calendar.google.com/calendar/ical/30be94c49a77e9942a703b2236b63d7dfa727e2daa33250151f278c1135391c7%40group.calendar.google.com/public/basic.ics';
             const eventsContainer = document.getElementById('events-container');
             const loadMoreContainer = document.getElementById('load-more-container');
             
             try {
-                // Using a reliable iCal to JSON conversion service
-                const apiUrl = `https://api.ical-to-json.com/v1?url=${encodeURIComponent(icalUrl)}`;
+                // Using a reliable iCal to JSON conversion service via a proxy to avoid CORS issues.
+                const apiUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://api.ical-to-json.com/v1?url=${icalUrl}`)}`;
                 const response = await fetch(apiUrl);
                 if (!response.ok) throw new Error(`API error: ${response.status} ${response.statusText}`);
                 
                 const data = await response.json();
                 
-                // The structure is data.vcalendar[0].vevent
                 const allEvents = (data.vcalendar?.[0]?.vevent || [])
                     .map(event => ({
                         title: event.summary,
@@ -494,7 +548,7 @@
                 carouselInterval = setInterval(() => {
                     currentIndex = (currentIndex + 1) % artists.length;
                     showArtists();
-                }, 5000); // Now 5 seconds
+                }, 5000); // 5 seconds
             }
 
             prevBtn.addEventListener('click', () => {
